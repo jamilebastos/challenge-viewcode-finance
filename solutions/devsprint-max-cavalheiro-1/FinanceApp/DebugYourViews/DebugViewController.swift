@@ -20,13 +20,11 @@ import UIKit
 class DebugViewController: UIViewController {
 
     private let myView: UIView = {
-
-        let view = UIView()
+        let view = UserProfileView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
 
-    private let myViewHeight: CGFloat = 100
 
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -36,12 +34,10 @@ class DebugViewController: UIViewController {
         view.addSubview(myView)
 
         NSLayoutConstraint.activate([
-
             myView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             myView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             myView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            myView.heightAnchor.constraint(equalToConstant: myViewHeight),
-
+            myView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor),
         ])
     }
 

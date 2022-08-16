@@ -57,9 +57,16 @@ class UserProfileHeaderView: UIView {
         return userBankName
     }()
     
+    var containerView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     override init(frame: CGRect) {
-        super.init(frame: frame)
+        super.init(frame: .zero)
         setupViews()
+        setupContainerView()
         setupUserImage()
         setupUserProfileName()
         setupUserBankAgency()
@@ -72,47 +79,60 @@ class UserProfileHeaderView: UIView {
     }
     
     private func setupViews() {
-        addSubview(userImage)
-        addSubview(userProfileName)
-        addSubview(userBankAgency)
-        addSubview(userBankAccount)
-        addSubview(userBankName)
+
+        addSubview(containerView)
+        containerView.addSubview(userImage)
+        containerView.addSubview(userProfileName)
+        containerView.addSubview(userBankAgency)
+        containerView.addSubview(userBankAccount)
+        containerView.addSubview(userBankName)
+    }
+    
+    private func setupContainerView() {
+        NSLayoutConstraint.activate([
+            containerView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            containerView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            containerView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            containerView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
+        ])
     }
     
     private func setupUserImage() {
         NSLayoutConstraint.activate([
-            userImage.topAnchor.constraint(equalTo: topAnchor, constant: 10),
-            userImage.centerXAnchor.constraint(equalTo: centerXAnchor),
+            userImage.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 10),
+            userImage.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
             userImage.heightAnchor.constraint(equalToConstant: 100),
             userImage.widthAnchor.constraint(equalToConstant: 100)
         ])
     }
+
     
     private func setupUserProfileName() {
         NSLayoutConstraint.activate([
             userProfileName.topAnchor.constraint(equalTo: userImage.bottomAnchor, constant: 10),
-            userProfileName.centerXAnchor.constraint(equalTo: userImage.centerXAnchor)
+            userProfileName.centerXAnchor.constraint(equalTo: containerView.centerXAnchor)
         ])
     }
     
     private func setupUserBankAgency() {
         NSLayoutConstraint.activate([
             userBankAgency.topAnchor.constraint(equalTo: userProfileName.bottomAnchor, constant: 5),
-            userBankAgency.centerXAnchor.constraint(equalTo: userProfileName.centerXAnchor)
+            userBankAgency.centerXAnchor.constraint(equalTo: containerView.centerXAnchor)
         ])
     }
     
     private func setupUserBankAccount() {
         NSLayoutConstraint.activate([
             userBankAccount.topAnchor.constraint(equalTo: userBankAgency.bottomAnchor),
-            userBankAccount.centerXAnchor.constraint(equalTo: userBankAgency.centerXAnchor)
+            userBankAccount.centerXAnchor.constraint(equalTo: containerView.centerXAnchor)
         ])
     }
     
     private func setupUserBankName() {
         NSLayoutConstraint.activate([
             userBankName.topAnchor.constraint(equalTo: userBankAccount.bottomAnchor),
-            userBankName.centerXAnchor.constraint(equalTo: userBankAccount.centerXAnchor)
+            userBankName.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+            userBankName.centerXAnchor.constraint(equalTo: containerView.centerXAnchor)
         ])
     }
 }
