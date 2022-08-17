@@ -10,29 +10,34 @@ import UIKit
 
 struct Section {
     let title: String
+    let rows: [Row]
+    struct Row {
+        let name: String
+        let info: String?
+        let haveIndicator: Bool
+    }
 }
 
-struct Row {
-    let name: String
-    let info: String?
-}
 
 class UserInfoTableView: UIView, UITableViewDelegate {
     private var listIdentifier = "UserInfoTableView"
     
     let datasource: [Section] = [
-        Section(title: "My Account"),
-        Section(title: "General")
+        Section(title: "My Account", rows: [
+            Section.Row(name: "Phone", info: "+55 (11) 99999-9999", haveIndicator: false),
+            Section.Row(name: "E-mail", info: "user@devpass.com", haveIndicator: false),
+            Section.Row(name: "Address", info: "Rua Bela Cintra, 495", haveIndicator: false),
+            Section.Row(name: "Personal Data", info: nil, haveIndicator: true),
+            Section.Row(name: "Bank Account", info: nil, haveIndicator: true),
+            Section.Row(name: "Taxes", info: nil, haveIndicator: true)
+        ]),
+        Section(title: "General", rows: [
+            Section.Row(name: "Need help?", info: nil, haveIndicator: true),
+            Section.Row(name: "About Devpass", info: nil, haveIndicator: true),
+            Section.Row(name: "App Version", info: "1.0 (1)", haveIndicator: false),
+        ])
     ]
     
-    let userInfo: [Row] = [
-        Row(name: "Phone", info: "+55 (11) 99999-9999"),
-        Row(name: "E-mail", info: "user@devpass.com"),
-        Row(name: "Address", info: "Rua Bela Cintra, 495"),
-        Row(name: "Personal Data", info: nil),
-        Row(name: "Bank Account", info: nil),
-        Row(name: "Taxes", info: nil)
-    ]
     
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
@@ -79,7 +84,7 @@ private extension UserInfoTableView {
 
 extension UserInfoTableView: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return userInfo.count
+        return datasource[section].rows.count
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -92,10 +97,7 @@ extension UserInfoTableView: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: self.listIdentifier)!
-        cell.textLabel?.text = userInfo[indexPath.row].name
-        if (indexPath.row == userInfo.count - 1) {
-            
-        }
+        cell.textLabel?.text = datasource[indexPath.section].rows[indexPath.row].name
         return cell
     }
 }
