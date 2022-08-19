@@ -18,7 +18,6 @@ struct Section {
     }
 }
 
-
 class UserInfoTableView: UIView, UITableViewDelegate {
     private var listIdentifier = "UserInfoTableView"
     
@@ -38,14 +37,10 @@ class UserInfoTableView: UIView, UITableViewDelegate {
         ])
     ]
     
-    
     private lazy var tableView: UITableView = {
-        let tableView = UITableView(frame: .zero, style: .grouped)
+        let tableView = UITableView(frame: .zero)
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: self.listIdentifier)
-        tableView.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -10)
-        tableView.clipsToBounds = false
-        tableView.automaticallyAdjustsScrollIndicatorInsets = false
+        tableView.register(UserTableViewCell.self, forCellReuseIdentifier: UserTableViewCell.classIdentifier())
         tableView.dataSource = self
         return tableView
     }()
@@ -62,22 +57,21 @@ class UserInfoTableView: UIView, UITableViewDelegate {
 
 private extension UserInfoTableView {
     func setupViews() {
-        self.backgroundColor = UIColor(red: 0.898, green: 0.898, blue: 0.898, alpha: 1)
-        self.tableView.backgroundColor = UIColor(red: 0.898, green: 0.898, blue: 0.898, alpha: 1)
-        self.configureSubviews()
-        self.configureSubviewsConstraints()
+        tableView.backgroundColor = UIColor(red: 0.898, green: 0.898, blue: 0.898, alpha: 1)
+        configureSubviews()
+        configureSubviewsConstraints()
     }
     
     func configureSubviews() {
-        self.addSubview(self.tableView)
+        addSubview(tableView)
     }
-    
+
     func configureSubviewsConstraints() {
         NSLayoutConstraint.activate([
-            self.tableView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
-            self.tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10),
-            self.tableView.topAnchor.constraint(equalTo: self.topAnchor),
-            self.tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+            tableView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            tableView.topAnchor.constraint(equalTo: self.topAnchor),
+            tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         ])
     }
 }
@@ -96,8 +90,19 @@ extension UserInfoTableView: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: self.listIdentifier)!
-        cell.textLabel?.text = datasource[indexPath.section].rows[indexPath.row].name
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: UserTableViewCell.classIdentifier()) as? UserTableViewCell
+        else { return UITableViewCell() }
+        
+        let name = datasource[indexPath.section].rows[indexPath.row].name
+        let description = datasource[indexPath.section].rows[indexPath.row].info
+        let hasIndicator = datasource[indexPath.section].rows[indexPath.row].haveIndicator
+        
+        if (hasIndicator) {
+            cell.accessoryType = .disclosureIndicator
+        }
+        
+        cell.configure(name, description ?? "")
+
         return cell
     }
 }
